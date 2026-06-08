@@ -3,6 +3,26 @@ from discord import app_commands
 from discord.ext import commands
 import random
 import datetime
+import os
+from threading import Thread
+from flask import Flask
+
+# ==========================================
+# SERVEUR WEB FANTÔME POUR RENDER (ANTI-TIMEOUT)
+# ==========================================
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot en ligne !"
+
+def run_web():
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
+
+# Lance le mini-serveur en arrière-plan
+Thread(target=run_web).start()
 
 # ==========================================
 # CONFIGURATION INITIALE ET INTENTS
@@ -439,9 +459,7 @@ async def on_member_join(member):
         await channel.send(embed=embed)
 
 # ==========================================
-# LANCEMENT DU BOT
+# LANCEMENT DU BOT SECURISE
 # ==========================================
-
-import os
 
 bot.run(os.environ.get('DISCORD_TOKEN'))
